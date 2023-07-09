@@ -1,25 +1,35 @@
 class InfoMessage:
     """Информационное сообщение о тренировке."""
+
     pass
 
 
 class Training:
     """Базовый класс тренировки."""
 
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 ) -> None:
-        pass
+    LEN_STEP = 0.65  # длина шага в метрах
+    LEN_GREBOK = 1.38  # длина гребка в метрах
+    M_IN_KM = 1000  # константа для перевода значений из метров в километры
+
+    def __init__(
+        self,
+        action: int,  # колличество совершенных действий гребков или шагов
+        duration: float,  # время в часах
+        weight: float,  # вес в кг?
+    ) -> None:
+        self.action = action
+        self.duration = duration
+        self.weight = weight
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        pass
+        dist = self.action * self.LEN_STEP / self.M_IN_KM
+        return dist
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        pass
+        mean_speed = self.get_distance() / self.duration
+        return mean_speed
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -32,16 +42,19 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+
     pass
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
     pass
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
+
     pass
 
 
@@ -65,4 +78,3 @@ if __name__ == '__main__':
     for workout_type, data in packages:
         training = read_package(workout_type, data)
         main(training)
-
