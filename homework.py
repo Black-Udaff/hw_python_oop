@@ -15,7 +15,7 @@ class Training:
         self,
         action: int,  # колличество совершенных действий гребков или шагов
         duration: float,  # время в часах
-        weight: float,  # вес в кг?
+        weight: float,  # вес в Кг?
     ) -> None:
         self.action = action
         self.duration = duration
