@@ -21,18 +21,18 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
 
-    LEN_STEP = 0.65    # длина шага в метрах
+    LEN_STEP = 0.65  # длина шага в метрах
     LEN_GREBOK = 1.38  # длина гребка в метрах
-    M_IN_KM = 1000     # константа для перевода значений из метров в километры(и иобратно)
-    MIN_IN_HOUR = 60   # кол-во минут в часе
-    SEC_IN_HOUR = 3600 # кол-во секунд в часе
-    SM_IN_M = 100      # колво сантимертов в метре
+    M_IN_KM = 1000  # кол-во метров в километре
+    MIN_IN_HOUR = 60  # кол-во минут в часе
+    SEC_IN_HOUR = 3600  # кол-во секунд в часе
+    SM_IN_M = 100  # колво сантимертов в метре
 
     def __init__(
         self,
-        action: int,     # колличество совершенных действий гребков или шагов
-        duration: float, # время в часах
-        weight: float,   # вес в Кг?
+        action: int,  # колличество совершенных действий гребков или шагов
+        duration: float,  # время в часах
+        weight: float,  # вес в Кг?
     ) -> None:
         self.action = action
         self.duration = duration
@@ -66,40 +66,83 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+
     CALORIES_MEAN_SPEED_MULT = 18
-    CALORIES_MEAN_SPEED_SHIFT = 1.79 
+    CALORIES_MEAN_SPEED_SHIFT = 1.79
+
     def get_spent_calories(self) -> float:
-        calories = ((self.CALORIES_MEAN_SPEED_MULT * self.get_mean_speed()*self.M_IN_KM  + self.CALORIES_MEAN_SPEED_SHIFT) 
-                    * self.weight / self.M_IN_KM * (self.duration * self.MIN_IN_HOUR) )
+        calories = (
+            (
+                self.CALORIES_MEAN_SPEED_MULT
+                * self.get_mean_speed()
+                * self.M_IN_KM
+                + self.CALORIES_MEAN_SPEED_SHIFT
+            )
+            * self.weight
+            / self.M_IN_KM
+            * (self.duration * self.MIN_IN_HOUR)
+        )
         return calories
-    
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    CALORIES_MEAN_WEIGTH_MULT = 0.035
-    CALORIES_MEAN_WEIGTH_MULT_2 = 0.029
+
+    CAL_MEAN_WEIGTH_MULT = 0.035
+    CAL_MEAN_WEIGTH_MULT_2 = 0.029
+
     def __init__(
         self,
         action: int,  # колличество совершенных действий гребков или шагов
         duration: float,  # время в часах
         weight: float,  # вес в Кг?
-        height: int # Рост в сантиметрах
+        height: int,  # Рост в сантиметрах
     ) -> None:
         super().__init__(action, duration, weight)
         self.height = height
 
-     def get_spent_calories(self) -> float:   
-        calories = ((self.CALORIES_MEAN_WEIGTH_MULT * self.weight + 
-                     ((self.get_mean_speed()*self.M_IN_KM/self.SEC_IN_HOUR)**2 / рост_в_метрах)
-            * self.CALORIES_MEAN_WEIGTH_MULT_2 * self.height) * self.duration*self.MIN_IN_HOUR)
-    pass
+    def get_spent_calories(self) -> float:
+        calories = (
+            (
+                self.CAL_MEAN_WEIGTH_MULT * self.weight
+                + (
+                    (self.get_mean_speed() * self.M_IN_KM / self.SEC_IN_HOUR)
+                    ** 2
+                    / self.height
+                    / self.SM_IN_M
+                )
+                * self.CAL_MEAN_WEIGTH_MULT_2
+                * self.height
+            )
+            * self.duration
+            * self.MIN_IN_HOUR
+        )
+        return calories
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
 
-    pass
+    def __init__(
+        self,
+        action: int,
+        duration: float,
+        weight: float,
+        length_pool: int,
+        count_pool: int,
+    ) -> None:
+        super().__init__(action, duration, weight)
+        self.length_pool = length_pool
+        self.count_pool = count_pool
+
+    def get_mean_speed(self) -> float:
+        """Получить среднюю скорость движения."""
+        mean_speed = self.length_pool * self.count_pool / self.M_IN_KM / self.duration
+        return mean_speed
+    
+    def get_spent_calories(self) -> float:
+        calories = 
+    
 
 
 def read_package(workout_type: str, data: list) -> Training:
