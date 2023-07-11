@@ -78,6 +78,7 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     CALORIES_MEAN_WEIGTH_MULT = 0.035
+    CALORIES_MEAN_WEIGTH_MULT_2 = 0.029
     def __init__(
         self,
         action: int,  # колличество совершенных действий гребков или шагов
@@ -89,8 +90,9 @@ class SportsWalking(Training):
         self.height = height
 
      def get_spent_calories(self) -> float:   
-        ((self.CALORIES_MEAN_WEIGTH_MULT * self.weight + ((self.get_mean_speed()*self.M_IN_KM/self.SEC_IN_HOUR)**2 / рост_в_метрах)
-            * 0.029 * вес) * время_тренировки_в_минутах)
+        calories = ((self.CALORIES_MEAN_WEIGTH_MULT * self.weight + 
+                     ((self.get_mean_speed()*self.M_IN_KM/self.SEC_IN_HOUR)**2 / рост_в_метрах)
+            * self.CALORIES_MEAN_WEIGTH_MULT_2 * self.height) * self.duration*self.MIN_IN_HOUR)
     pass
 
 
