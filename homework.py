@@ -2,7 +2,7 @@ class InfoMessage:
     """Информационное сообщение о тренировке."""
 
     def __init__(self, training_type, duration, distance, speed, calories):
-        self.trainigtype = training_type
+        self.training_type = training_type
         self.duration = duration
         self.distance = distance
         self.speed = speed
@@ -22,7 +22,7 @@ class Training:
     """Базовый класс тренировки."""
 
     LEN_STEP = 0.65  # длина шага в метрах
-    LEN_GREBOK = 1.38  # длина гребка в метрах
+    
     M_IN_KM = 1000  # кол-во метров в километре
     MIN_IN_HOUR = 60  # кол-во минут в часе
     SEC_IN_HOUR = 3600  # кол-во секунд в часе
@@ -54,12 +54,12 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        message = InfoMessage.get_message(
+        message = InfoMessage(
             self.__class__.__name__,
             self.duration,
-            self.distance,
-            self.speed,
-            self.calories,
+            self.get_distance(),
+            self.get_mean_speed(),
+            self.get_spent_calories(),
         )
         return message
 
@@ -122,6 +122,8 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
+    SWIM_MULT = 1.1
+    LEN_STEP = 1.38
 
     def __init__(
         self,
@@ -141,18 +143,24 @@ class Swimming(Training):
         return mean_speed
     
     def get_spent_calories(self) -> float:
-        calories = 
-    
+        calories = ((self.get_mean_speed()+self.SWIM_MULT)*2*self.weight*self.duration)
+        return calories
 
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    pass
+    training_type = {'SWM': Swimming,
+                     'RUN': Running,
+                     'WLK': SportsWalking}
+    train = training_type[workout_type](*data)
+    return train
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    pass
+    info = training.show_training_info()
+    print(info.get_message())
+    
 
 
 if __name__ == '__main__':
