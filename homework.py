@@ -28,9 +28,9 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
 
-    LEN_STEP = 0.65  # длина шага в метрах
-    M_IN_KM = 1000  # кол-во метров в километре
-    MIN_IN_HOUR = 60  # кол-во минут в часе
+    LEN_STEP: float = 0.65  # длина шага в метрах
+    M_IN_KM: int = 1000  # кол-во метров в километре
+    MIN_IN_HOUR: int = 60  # кол-во минут в часе
 
     def __init__(
         self,
@@ -165,8 +165,12 @@ def read_package(workout_type: str, data: list) -> Training:
         'RUN': Running,
         'WLK': SportsWalking,
     }
-    train: Training = training_type[workout_type](*data)
-    return train
+    if workout_type in training_type:
+        train: Training = training_type[workout_type](*data)
+        return train
+    else:
+        # raise ValueError(f'{workout_type}: Такой тренировки нет!')
+        print(f'{workout_type}: Такой тренировки нет!')
 
 
 def main(training: Training) -> None:
@@ -184,4 +188,5 @@ if __name__ == '__main__':
 
     for workout_type, data in packages:
         training = read_package(workout_type, data)
-        main(training)
+        if training is not None:
+            main(training)
