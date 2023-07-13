@@ -85,7 +85,7 @@ class Running(Training):
             * (self.duration * self.MIN_IN_HOUR)
         )
         return calories
-
+123
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
