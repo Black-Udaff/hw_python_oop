@@ -1,28 +1,24 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-
-    def __init__(
-        self,
-        training_type: str,
-        duration: float,
-        distance: float,
-        speed: float,
-        calories: float,
-    ) -> None:
-        self.training_type = training_type
-        self.duration = duration
-        self.distance = distance
-        self.speed = speed
-        self.calories = calories
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
+    message: str = (
+        'Тип тренировки: {training_type}; '
+        'Длительность: {duration:.3f} ч.; '
+        'Дистанция: {distance:.3f} км; '
+        'Ср. скорость: {speed:.3f} км/ч; '
+        'Потрачено ккал: {calories:.3f}.'
+    )
 
     def get_message(self) -> str:
-        return (
-            f'Тип тренировки: {self.training_type}; '
-            f'Длительность: {self.duration:.3f} ч.; '
-            f'Дистанция: {self.distance:.3f} км; '
-            f'Ср. скорость: {self.speed:.3f} км/ч; '
-            f'Потрачено ккал: {self.calories:.3f}.'
-        )
+        return self.message.format(**vars(self))
 
 
 class Training:
@@ -85,7 +81,7 @@ class Running(Training):
             * (self.duration * self.MIN_IN_HOUR)
         )
         return calories
-123
+
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
@@ -158,19 +154,19 @@ class Swimming(Training):
         return calories
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: list) -> Training | None:
     """Прочитать данные полученные от датчиков."""
     training_type: dict[str, type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking,
     }
-    if workout_type in training_type:
-        train: Training = training_type[workout_type](*data)
-        return train
-    else:
-        # raise ValueError(f'{workout_type}: Такой тренировки нет!')
+    if workout_type not in training_type:
         print(f'{workout_type}: Такой тренировки нет!')
+        # raise KeyError(f'{workout_type}: Такой тренировки нет!')
+        return None
+    train: Training = training_type[workout_type](*data)
+    return train
 
 
 def main(training: Training) -> None:
