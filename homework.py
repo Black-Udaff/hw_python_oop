@@ -163,11 +163,9 @@ def read_package(workout_type: str, data: list) -> Training:
         'WLK': SportsWalking,
     }
     if workout_type not in training_type:
-        print(f'{workout_type}: Такой тренировки нет!')
-        # raise KeyError(f'{workout_type}: Такой тренировки нет!')
-    else:
-        train: Training = training_type[workout_type](*data)
-        return train
+        raise KeyError(f'{workout_type}: Такой тренировки нет!')
+    train: Training = training_type[workout_type](*data)
+    return train
 
 
 def main(training: Training) -> None:
@@ -185,5 +183,4 @@ if __name__ == '__main__':
 
     for workout_type, data in packages:
         training = read_package(workout_type, data)
-        if training is not None:
-            main(training)
+        main(training)
